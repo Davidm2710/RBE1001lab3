@@ -130,7 +130,8 @@ while True:
     while Robot_State == ROBOT_IDLE:
         left_motor.stop()
         right_motor.stop()
-        arm_motor.stop()
+        arm_motor.spin_to_position(140 * 5,30)
+
 
                   
     while Robot_State == ROBOT_SEARCHING:
@@ -189,11 +190,24 @@ while True:
 
 
     while Robot_State == ROBOT_GRAB_FRUIT:
-        arm_motor.spin_to_position(200 * 5, DEGREES, 20)
+        arm_motor.torque()
+        Torque_Threshold = 0
+        if Held_Fruit_Num == 0:
+            Torque_Threshold = 0
+        elif Held_Fruit_Num == 1:
+            Torque_Threshold = 0
+        elif Held_Fruit_Num == 2:
+            Torque_Threshold = 0
+        elif Held_Fruit_Num == 3:
+            Torque_Threshold = 0
+        while arm_motor.torque() < Torque_Threshold:
+            arm_motor.spin(REVERSE,10)
         print("TOUCHED FRUIT YAY")
+        left_motor.spin_for(REVERSE, 10, TURNS, 100)
+        right_motor.spin_for(REVERSE, 10, TURNS, 100)
         Held_Fruit_Num += 1
         wait(2000)
-        arm_motor.spin_to_position(0, DEGREES, 30)
+        arm_motor.spin_to_position(150, DEGREES, 30)
         if Held_Fruit_Num < 4:
             Robot_State = ROBOT_SEARCH_SPECIFIC
         else:
